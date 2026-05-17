@@ -1,0 +1,19 @@
+[Unit]
+Description=BSC PancakeSwap Token Monitor Bot (main.py)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/pancake-bot
+Environment=PATH=/home/ubuntu/pancake-bot/.venv/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/ubuntu/pancake-bot/.venv/bin/python main.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pancake-bsc
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,436 @@
+═══════════════════════════════════════════════════════════════
+🚀 ПОЛНАЯ ИНСТРУКЦИЯ: DEPLOYMENT ЧЕРЕЗ GIT
+═══════════════════════════════════════════════════════════════
+
+✅ ПРЕИМУЩЕСТВА GIT МЕТОДА
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Автоматические обновления (git pull)
+✅ История изменений
+✅ Резервная копия на GitHub
+✅ Легкое восстановление
+✅ Простое обслуживание
+✅ Версионный контроль
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 1: ПОДГОТОВКА НА MAC (ОДИН РАЗ)
+═══════════════════════════════════════════════════════════════
+
+1.1 Создайте GitHub аккаунт
+   • Перейдите на https://github.com
+   • Нажмите "Sign up"
+   • Создайте аккаунт (бесплатно)
+
+1.2 Создайте новый репозиторий
+   • Нажмите "New repository"
+   • Имя: pancake-bot
+   • Описание: BSC Volume Alert Bot
+   • Выберите "Private" (важно!)
+   • НЕ добавляйте README, .gitignore, лицензию
+   • Нажмите "Create repository"
+
+1.3 Настройте Git на Mac
+   Откройте Terminal и выполните:
+
+   ```bash
+   # Перейдите в папку с ботом
+   cd "/Users/johnbravo/Desktop/pancake pools bot"
+   
+   # Инициализируйте Git
+   git init
+   
+   # Добавьте все файлы
+   git add .
+   
+   # Сделайте первый коммит
+   git commit -m "Initial commit - Production ready bot"
+   
+   # Переименуйте ветку в main
+   git branch -M main
+   
+   # Добавьте удаленный репозиторий (замените YOUR_USERNAME)
+   git remote add origin https://github.com/YOUR_USERNAME/pancake-bot.git
+   
+   # Отправьте код на GitHub
+   git push -u origin main
+   ```
+
+1.4 Проверьте результат
+   • Откройте https://github.com/YOUR_USERNAME/pancake-bot
+   • Должны увидеть все файлы бота
+   • Репозиторий должен быть приватным
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 2: УСТАНОВКА НА WINDOWS SERVER
+═══════════════════════════════════════════════════════════════
+
+2.1 Установите Python
+   • Скачайте: https://www.python.org/downloads/
+   • Выберите Python 3.11+
+   • ✅ ОБЯЗАТЕЛЬНО: отметьте "Add Python to PATH"
+   • Установите с настройками по умолчанию
+
+2.2 Установите Git
+   • Скачайте: https://git-scm.com/download/win
+   • Установите с настройками по умолчанию
+   • Перезагрузите компьютер
+
+2.3 Проверьте установку
+   Откройте PowerShell и выполните:
+   ```powershell
+   python --version
+   git --version
+   ```
+   Должны увидеть версии Python и Git
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 3: КЛОНИРОВАНИЕ РЕПОЗИТОРИЯ
+═══════════════════════════════════════════════════════════════
+
+3.1 Откройте PowerShell как Администратор
+
+3.2 Перейдите на Desktop
+   ```powershell
+   cd C:\Users\YOUR_USERNAME\Desktop
+   ```
+
+3.3 Клонируйте репозиторий
+   ```powershell
+   git clone https://github.com/YOUR_USERNAME/pancake-bot.git "pancake bot"
+   ```
+
+3.4 Перейдите в папку
+   ```powershell
+   cd "pancake bot"
+   ```
+
+3.5 Проверьте файлы
+   ```powershell
+   dir
+   ```
+   Должны увидеть: main_new.py, requirements.txt, .gitignore и др.
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 4: НАСТРОЙКА ВИРТУАЛЬНОГО ОКРУЖЕНИЯ
+═══════════════════════════════════════════════════════════════
+
+4.1 Создайте виртуальное окружение
+   ```powershell
+   python -m venv .venv
+   ```
+
+4.2 Активируйте виртуальное окружение
+   ```powershell
+   .\.venv\Scripts\Activate.ps1
+   ```
+
+   ⚠️ Если получите ошибку о политике выполнения:
+   ```powershell
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   ```
+   Затем повторите активацию.
+
+4.3 Обновите pip
+   ```powershell
+   python -m pip install --upgrade pip
+   ```
+
+4.4 Установите зависимости
+   ```powershell
+   pip install -r requirements.txt
+   ```
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 5: СОЗДАНИЕ КОНФИГУРАЦИИ
+═══════════════════════════════════════════════════════════════
+
+5.1 Создайте файл .env
+   ```powershell
+   notepad .env
+   ```
+
+5.2 Вставьте содержимое (ТОЧНО как показано):
+   ```
+   TELEGRAM_BOT_TOKEN=8294647084:AAFbiph-owj2XQuIO8LyflUQHgQaa8mEw2I
+   TELEGRAM_CHAT_ID=@pancakepools
+
+   # PRODUCTION SETTINGS
+   SCAN_INTERVAL_SECONDS=30
+   MIN_5M_VOLUME_USD_NEW=250000
+   MAX_TOKEN_AGE_HOURS=2
+   MIN_STABILITY_CHECKS=2
+   MIN_5M_VOLUME_USD_ESTABLISHED=3000000
+   MIN_HOLDERS=200
+   MIN_MARKET_CAP_USD=100000
+   MAX_BUY_TAX=5
+   MAX_SELL_TAX=5
+   EXCLUDE_HONEYPOTS=true
+   DEDUP_TTL_HOURS=24
+
+   # DexTools API Key
+   DEXTOOLS_API_KEY=CuwnlXICEC6HLvJ1v18zr4iQxCaFsvsD48x7dMCt
+   ```
+
+5.3 Сохраните файл (Ctrl+S) и закройте Notepad
+
+5.4 Создайте файл отслеживания токенов
+   ```powershell
+   echo {} > tracked_tokens.json
+   ```
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 6: ТЕСТИРОВАНИЕ
+═══════════════════════════════════════════════════════════════
+
+6.1 Убедитесь, что виртуальное окружение активно
+   ```powershell
+   .\.venv\Scripts\Activate.ps1
+   ```
+
+6.2 Запустите бота для тестирования
+   ```powershell
+   python main_new.py
+   ```
+
+6.3 Проверьте вывод
+   Должны увидеть:
+   ```
+   Bot started, scanning every 30 seconds...
+   DexScreener: fetched X BSC pairs
+   GeckoTerminal: fetched X pools
+   Found X tokens matching criteria...
+   ```
+
+6.4 Остановите тест
+   Нажмите Ctrl+C
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 7: НАСТРОЙКА 24/7 РАБОТЫ
+═══════════════════════════════════════════════════════════════
+
+7.1 Создайте BAT файл для запуска
+   ```powershell
+   notepad run_bot.bat
+   ```
+
+7.2 Вставьте содержимое:
+   ```batch
+   @echo off
+   echo ========================================
+   echo  PANCAKE POOLS BOT - STARTING
+   echo ========================================
+   echo.
+
+   cd /d "%~dp0"
+   .venv\Scripts\python.exe main_new.py
+
+   pause
+   ```
+
+7.3 Сохраните и закройте
+
+7.4 Создайте задачу в Планировщике задач
+   • Откройте "Планировщик задач" (Task Scheduler)
+   • Нажмите "Создать базовую задачу"
+   • Имя: "Pancake Pools Bot"
+   • Описание: "BSC Volume Alert Bot"
+   • Триггер: "При запуске компьютера"
+   • Действие: "Запустить программу"
+   • Программа: C:\Users\YOUR_USERNAME\Desktop\pancake bot\.venv\Scripts\python.exe
+   • Аргументы: main_new.py
+   • Начальная папка: C:\Users\YOUR_USERNAME\Desktop\pancake bot
+   • Отметьте "Открыть диалог свойств"
+   • Нажмите "Готово"
+
+7.5 Настройте свойства задачи
+   • Вкладка "Общие":
+     ✅ "Выполнять для всех пользователей"
+     ✅ "Выполнять с наивысшими правами"
+   • Вкладка "Условия":
+     ❌ Снимите "Запускать только при питании от сети"
+   • Вкладка "Параметры":
+     ✅ "При сбое задачи перезапускать каждые: 1 минута"
+     ✅ "Попыток перезапуска: 999"
+   • Нажмите "ОК"
+
+7.6 Введите пароль администратора
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 8: ПРОВЕРКА РАБОТЫ
+═══════════════════════════════════════════════════════════════
+
+8.1 Запустите задачу вручную
+   • В Планировщике задач найдите "Pancake Pools Bot"
+   • Правый клик → "Выполнить"
+
+8.2 Проверьте логи
+   ```powershell
+   cd "C:\Users\YOUR_USERNAME\Desktop\pancake bot"
+   Get-Content "new_tokens_bot.log" -Tail 20
+   ```
+
+8.3 Проверьте процессы
+   ```powershell
+   tasklist | findstr python
+   ```
+
+8.4 Перезагрузите сервер
+   • Перезагрузите Windows Server
+   • Проверьте, что бот запустился автоматически
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 9: ОБНОВЛЕНИЯ В БУДУЩЕМ
+═══════════════════════════════════════════════════════════════
+
+9.1 Когда я внесу правки на Mac:
+   • Обновлю код
+   • Сделаю git push
+
+9.2 На Windows Server выполните:
+   ```powershell
+   # Остановите бота
+   taskkill /F /IM python.exe
+   
+   # Перейдите в папку
+   cd "C:\Users\YOUR_USERNAME\Desktop\pancake bot"
+   
+   # Получите обновления
+   git pull origin main
+   
+   # Обновите зависимости (если нужно)
+   .\.venv\Scripts\Activate.ps1
+   pip install -r requirements.txt
+   
+   # Перезапустите задачу
+   # В Планировщике задач: правый клик → "Выполнить"
+   ```
+
+9.3 Автоматическое обновление (опционально)
+   Создайте скрипт update_bot.bat:
+   ```batch
+   @echo off
+   echo Updating Pancake Pools Bot...
+   
+   cd /d "C:\Users\YOUR_USERNAME\Desktop\pancake bot"
+   
+   taskkill /F /IM python.exe
+   git pull origin main
+   
+   .\.venv\Scripts\Activate.ps1
+   pip install -r requirements.txt
+   
+   echo Bot updated! Starting...
+   .venv\Scripts\python.exe main_new.py
+   ```
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 10: МОНИТОРИНГ И ОБСЛУЖИВАНИЕ
+═══════════════════════════════════════════════════════════════
+
+10.1 Проверка статуса
+   ```powershell
+   # Проверить процессы
+   tasklist | findstr python
+   
+   # Посмотреть логи
+   Get-Content "new_tokens_bot.log" -Tail 50
+   
+   # Проверить последние алерты
+   Get-Content "new_tokens_bot.log" | Select-String "Alert sent" | Select-Object -Last 10
+   ```
+
+10.2 Остановка бота
+   ```powershell
+   taskkill /F /IM python.exe
+   ```
+
+10.3 Запуск бота
+   ```powershell
+   cd "C:\Users\YOUR_USERNAME\Desktop\pancake bot"
+   .\.venv\Scripts\Activate.ps1
+   python main_new.py
+   ```
+
+10.4 Проверка обновлений
+   ```powershell
+   cd "C:\Users\YOUR_USERNAME\Desktop\pancake bot"
+   git status
+   git log --oneline -5
+   ```
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 11: РЕШЕНИЕ ПРОБЛЕМ
+═══════════════════════════════════════════════════════════════
+
+11.1 Бот не запускается
+   • Проверьте Python: python --version
+   • Проверьте виртуальное окружение: .\.venv\Scripts\Activate.ps1
+   • Проверьте зависимости: pip list
+   • Проверьте .env файл: Get-Content .env
+
+11.2 Ошибки Git
+   ```powershell
+   # Проверить статус
+   git status
+   
+   # Сбросить изменения
+   git reset --hard HEAD
+   
+   # Принудительно обновить
+   git fetch origin
+   git reset --hard origin/main
+   ```
+
+11.3 Проблемы с правами
+   • Запустите PowerShell как Администратор
+   • Проверьте права на папку
+
+11.4 Бот не отправляет алерты
+   • Проверьте Telegram токен
+   • Проверьте DexTools API ключ
+   • Проверьте логи на ошибки
+
+═══════════════════════════════════════════════════════════════
+📋 ЭТАП 12: РЕЗЕРВНОЕ КОПИРОВАНИЕ
+═══════════════════════════════════════════════════════════════
+
+12.1 Автоматическое резервное копирование
+   • Код уже в GitHub (приватный репозиторий)
+   • Логи сохраняются локально
+   • Конфигурация в .env файле
+
+12.2 Ручное резервное копирование
+   ```powershell
+   # Создать архив всей папки
+   Compress-Archive -Path "C:\Users\YOUR_USERNAME\Desktop\pancake bot" -DestinationPath "C:\Users\YOUR_USERNAME\Desktop\pancake-bot-backup.zip"
+   ```
+
+12.3 Восстановление из резервной копии
+   ```powershell
+   # Распаковать архив
+   Expand-Archive -Path "C:\Users\YOUR_USERNAME\Desktop\pancake-bot-backup.zip" -DestinationPath "C:\Users\YOUR_USERNAME\Desktop\"
+   ```
+
+═══════════════════════════════════════════════════════════════
+✅ ГОТОВО! ВАШ БОТ РАБОТАЕТ 24/7
+═══════════════════════════════════════════════════════════════
+
+Теперь у вас есть:
+✅ Автоматически работающий бот
+✅ Простые обновления через Git
+✅ Резервная копия на GitHub
+✅ Мониторинг и обслуживание
+✅ Автоматический перезапуск при сбоях
+
+═══════════════════════════════════════════════════════════════
+📞 ПОДДЕРЖКА
+═══════════════════════════════════════════════════════════════
+
+При возникновении проблем:
+1. Проверьте логи: Get-Content "new_tokens_bot.log" -Tail 50
+2. Проверьте процессы: tasklist | findstr python
+3. Перезапустите бота
+4. Обратитесь за помощью
+
+═══════════════════════════════════════════════════════════════
+
