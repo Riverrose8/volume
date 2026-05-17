@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meme Coin Telegram Alerts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Meme Coin Telegram Bot</p>
+        <h1>Get pinged when fresh coins cross your market cap target.</h1>
+        <p class="hero-text">
+          This scanner auto-discovers fresh coins from live DEX Screener feeds, including
+          PancakeSwap on BSC, and fires browser or Telegram alerts when one stays above your target.
+        </p>
+      </div>
+
+      <div class="hero-panel">
+        <div class="status-card">
+          <span class="status-label">Notification Permission</span>
+          <strong id="permission-state">Checking...</strong>
+          <button id="permission-button" class="secondary-button" type="button">Enable Notifications</button>
+        </div>
+
+        <div class="status-card">
+          <span class="status-label">Polling</span>
+          <strong id="polling-state">Waiting to start</strong>
+          <span id="last-updated">No updates yet</span>
+        </div>
+
+        <div class="status-card">
+          <span class="status-label">Loaded Sources</span>
+          <strong id="source-state">Auto DEX discovery on</strong>
+          <span>No manual addresses required. Anti-rug filters, BSC/PancakeSwap scanning, and a hold rule are on.</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel form-panel">
+        <div class="panel-heading">
+          <h2>Scanner Settings</h2>
+          <p>One global rule set for automatic Solana, Base, and PancakeSwap/BSC scanning.</p>
+        </div>
+
+        <div class="status-card inline-card">
+          <span class="status-label">How To Use</span>
+          <strong>Pick your chains, then leave the page open and it will auto-scan on its own.</strong>
+          <span>Set your target, choose how long a coin must hold above it, and add Telegram only if you want phone alerts.</span>
+        </div>
+
+        <form id="settings-form" class="alert-form">
+          <div class="two-column">
+            <label>
+              Alert target (USD)
+              <input id="threshold" name="threshold" type="number" min="0" step="1" value="150000" placeholder="150000" required>
+            </label>
+
+            <label>
+              Scan every
+              <select id="interval" name="interval">
+                <option value="15">15 seconds</option>
+                <option value="30" selected>30 seconds</option>
+                <option value="60">60 seconds</option>
+                <option value="120">120 seconds</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="two-column">
+            <label>
+              Must hold above target for
+              <input id="hold-minutes" name="hold-minutes" type="number" min="0" step="1" value="5" placeholder="5" required>
+            </label>
+
+            <label>
+              Telegram chat ID
+              <input id="telegram-chat-id" name="telegram-chat-id" type="text" placeholder="Optional for phone alerts">
+            </label>
+          </div>
+
+          <fieldset class="chain-fieldset">
+            <legend>Networks</legend>
+            <label class="checkbox-label">
+              <input type="checkbox" data-chain-id="solana" checked>
+              <span>Solana</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" data-chain-id="base" checked>
+              <span>Base</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" data-chain-id="bsc" checked>
+              <span>BSC / PancakeSwap</span>
+            </label>
+          </fieldset>
+
+          <label>
+            Telegram bot token
+            <input id="telegram-bot-token" name="telegram-bot-token" type="text" placeholder="Optional: 123456:ABC...">
+          </label>
+
+          <div class="status-card inline-card">
+            <span class="status-label">Rules</span>
+            <span>The scanner only keeps pairs with liquidity above $500, 24h volume above $1,000, at least 25 transactions in 24h, and at least 10 minutes of age.</span>
+            <span>BSC hits include a PancakeSwap link in the Telegram message.</span>
+          </div>
+
+          <div class="status-card inline-card">
+            <span class="status-label">Phone Alerts</span>
+            <strong>Telegram Optional</strong>
+            <span>If you add a Telegram bot token and chat ID, the same alert will also go to your phone through Telegram.</span>
+          </div>
+
+          <div class="two-column">
+            <button class="primary-button" type="submit">Save Scanner Settings</button>
+            <button id="reset-button" class="secondary-button" type="button">Reset Scanner Data</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel list-panel">
+        <div class="panel-heading">
+          <h2>Hit Log</h2>
+          <p>Coins the scanner caught after they crossed your market-cap target.</p>
+        </div>
+
+        <div id="hit-log-empty" class="empty-state">
+          No hits yet. Leave this page open and the scanner will start filling this log automatically.
+        </div>
+
+        <div id="hit-log-list" class="alerts-list"></div>
+      </section>
+    </main>
+
+    <section class="panel preview-panel">
+      <div class="panel-heading preview-heading">
+        <div>
+          <h2>Scanner Preview</h2>
+          <p>Preview recent coins from the last 24 hours. A coin only becomes "Would Ping" after it has held above your target for the hold window.</p>
+        </div>
+        <button id="preview-button" class="secondary-button" type="button">Load 24h Preview</button>
+      </div>
+
+      <div id="preview-status" class="preview-status">Not loaded yet.</div>
+      <div id="preview-empty" class="empty-state">
+        No preview data yet. Click "Load 24h Preview" to load recent coins.
+      </div>
+      <div id="preview-list" class="alerts-list"></div>
+    </section>
+  </div>
+
+  <template id="hit-card-template">
+    <article class="alert-card">
+      <div class="alert-main">
+        <div class="alert-title-row">
+          <img class="alert-image hit-image" alt="" hidden>
+          <h3 class="hit-name"></h3>
+          <span class="pill hit-condition"></span>
+        </div>
+        <p class="alert-meta hit-meta"></p>
+        <div class="stats-grid">
+          <div>
+            <span class="stat-label">Market Cap</span>
+            <strong class="hit-marketcap">-</strong>
+          </div>
+          <div>
+            <span class="stat-label">Liquidity</span>
+            <strong class="hit-liquidity">-</strong>
+          </div>
+          <div>
+            <span class="stat-label">Pair Age</span>
+            <strong class="hit-age">-</strong>
+          </div>
+          <div>
+            <span class="stat-label">Pair</span>
+            <strong class="hit-pair">-</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert-side">
+        <span class="status-pill status-fired">Pinged</span>
+        <span class="last-check hit-time">Caught just now</span>
+        <a class="secondary-button preview-link hit-link" target="_blank" rel="noreferrer">Open on DEX Screener</a>
+      </div>
+    </article>
+  </template>
+
+  <template id="preview-card-template">
+    <article class="alert-card preview-card">
+      <div class="alert-main">
+        <div class="alert-title-row">
+          <img class="alert-image preview-image" alt="" hidden>
+          <h3 class="preview-name"></h3>
+          <span class="pill preview-chain"></span>
+        </div>
+        <p class="alert-meta preview-address"></p>
+        <div class="stats-grid">
+          <div>
+            <span class="stat-label">Market Cap</span>
+            <strong class="preview-marketcap">-</strong>
+          </div>
+          <div>
+            <span class="stat-label">Liquidity</span>
+            <strong class="preview-liquidity">-</strong>
+          </div>
+          <div>
+            <span class="stat-label">Pair Age</span>
+            <strong class="preview-age">-</strong>
+          </div>
+          <div>
+            <span class="stat-label">Pair</span>
+            <strong class="preview-pair">-</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert-side">
+        <span class="status-pill preview-match status-ok">Below Target</span>
+        <a class="secondary-button preview-link" target="_blank" rel="noreferrer">Open on DEX Screener</a>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
